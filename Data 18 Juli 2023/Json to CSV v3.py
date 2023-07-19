@@ -10,8 +10,8 @@ import matplotlib.pyplot as plt
 from scipy.signal import hilbert
 import pandas as pd
 
-load_folder = ("E:/AMBIL-DATA/JSONtoCSV/")
-save_folder = ("E:/AMBIL-DATA/csv/")
+load_folder = ("E:/Pengolahan Data CD Bone-USG/Json/")
+save_folder = ("E:/Pengolahan Data CD Bone-USG/JSON-to-CSV/")
 
 class us_json:
     IDLine = []
@@ -105,3 +105,43 @@ if __name__ == "__main__":
             y.JSONprocessing(load_folder+MyDataFile)
             y.create_fft()
             y.CSV()
+
+
+"""if __name__ == "__main__":
+    print("Loaded!")
+
+    for filename in os.listdir(load_folder):
+        filepath = os.path.join(load_folder, filename)
+        if filename.endswith(".json") and os.path.isfile(filepath):
+            print(filename)
+            y = us_json()
+            y.JSONprocessing(filepath)
+            y.create_fft()
+            time.sleep(5)  # Tambahkan delay 5 detik di sini
+            y.CSV()"""
+
+
+"""if __name__ == "__main__":
+    print("Loaded!")
+
+    for filename in os.listdir(load_folder):
+        filepath = os.path.join(load_folder, filename)
+        if filename.lower().endswith(".json") and os.path.isfile(filepath):
+            print(filename)
+            y = us_json()
+            y.JSONprocessing(filepath)
+            y.create_fft()
+            # time.sleep(1)
+            y.CSV()"""
+
+"""if __name__ == "__main__":
+    print("Loaded!")
+
+    json_files = glob.glob(os.path.join(load_folder, "*.json"))
+
+    for filepath in json_files:
+        print(os.path.basename(filepath))
+        y = us_json()
+        y.JSONprocessing(filepath)
+        y.create_fft()
+        y.CSV()"""
