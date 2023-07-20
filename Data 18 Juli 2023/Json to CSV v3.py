@@ -91,20 +91,22 @@ class us_json:
 
     def CSV(self):
         if self.processed: #@todo check this to get env & al
-            file_names = save_folder+self.iD+"-"+str(self.N)+".csv"
+            file_names = save_folder+self.iD+str(self.N)+".csv"
             data = pd.DataFrame({"X": self.t , "Y": self.tmp}, index=range(len(self.t))) #"Y": self.tmp = raw, self.filtered_signal = filter, self.EnvHil = enveloppe
             delimiter = ","
             data.to_csv(file_names, index=False, sep=delimiter)
 
 if __name__ == "__main__":
     print("Loaded!")
-    for MyDataFile in os.listdir(load_folder):
-        if MyDataFile.endswith(".json"):
-            print(MyDataFile)
-            y = us_json()
-            y.JSONprocessing(load_folder+MyDataFile)
-            y.create_fft()
-            y.CSV()
+
+    json_files = glob.glob(os.path.join(load_folder, "*.json"))
+
+    for filepath in json_files:
+        print(os.path.basename(filepath))
+        y = us_json()
+        y.JSONprocessing(filepath)
+        y.create_fft()
+        y.CSV()
 
 
 """if __name__ == "__main__":
