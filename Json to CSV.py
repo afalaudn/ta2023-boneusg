@@ -64,9 +64,7 @@ class us_json:
             self.N = d['N']
             self.processed = True
 
-    def create_fft(self):
-        self.FFT_x = [X*self.f / (self.LengthT) for X in range(int(self.LengthT))]
-        self.FFT_y = np.fft.fft(self.tmp)
+    def filter(self):
         self.filtered_fft = np.fft.fft(self.tmp)
 
         for k in range(int(self.LengthT/2 + 1)):
@@ -78,32 +76,25 @@ class us_json:
                 self.filtered_fft[-k] = 0
 
         self.filtered_signal = np.real(np.fft.ifft(self.filtered_fft))
-
-        if self.processed:
-            plt.figure(figsize=(15, 5))
-            selfLength = int(self.LengthT/2)
-            plot_time = self.FFT_x[1:selfLength]
-            plot_abs_fft = np.abs(self.FFT_y[1:selfLength])
-            plot_filtered_fft = np.abs(self.filtered_fft[1:selfLength])
-
         self.EnvHil = self.filtered_signal
         self.EnvHil = np.asarray(np.abs(hilbert(self.filtered_signal)))
 
     def CSV(self):
         if self.processed: #@todo check this to get env & al
-            file_names = "30S20" +".csv"
-            data = pd.DataFrame({"X": self.t , "Y": self.tmp}, index=range(len(self.t))) #"Y": self.tmp = raw, self.filtered_signal = filter, self.EnvHil = enveloppe
+            file_names = save_folder+self.iD+"-"+str(self.N)+".csv"
+            data = pd.DataFrame({"X": self.EnvHil , "Y": self.tmp}, index=range(len(self.EnvHil)))
             delimiter = ","
             data.to_csv(file_names, index=False, sep=delimiter)
 
 if __name__ == "__main__":
     print("Loaded!")
-
-    json_files = glob.glob(os.path.join(load_folder, "*.json"))
-
-    for filepath in json_files:
-        print(os.path.basename(filepath))
-        y = us_json()
-        y.JSONprocessing(filepath)
-        y.create_fft()
-        y.CSV()
+    if len(sys.argv) > 1:
+        
+        if "process" in sys.argv[1]:
+            for MyDataFile in os.listdir(load_folder):
+                if MyDataFile.endswith(".json"):
+                    print(MyDataFile)
+                    y = us_json()
+                    y.JSONprocessing(load_folder+MyDataFile)
+                    y.filter() 
+                    y.CSV()
